@@ -1,0 +1,55 @@
+----------------------Creating tables--------------------
+create table Borrower(
+    rollno int primary key,
+    name varchar(50),
+    dateofissue date,
+    nameofbook varchar(50),
+    status char
+    );
+
+create table Fine(
+    rollno int,
+    dateofissue date,
+    amt int,
+    FOREIGN KEY(rollno) REFERENCES Borrower(rollno)
+    );
+
+-------------------Inserting Values----------------------------
+INSERT INTO Borrower (rollno, name, dateofissue, nameofbook, status)
+VALUES (1, 'John Doe', '2023-11-05', 'Introduction to SQL', 'I'),
+(2, 'Alice Smith', '2020-11-06', 'Database Management', 'I'),
+(3, 'Bob Johnson', '2022-11-07', 'Data Structures', 'I'),
+(4, 'Emily Brown', '2021-11-08', 'Programming in Java', 'I'),
+(5, 'Sarah Wilson', '2023-10-09', 'Machine Learning Fundamentals', 'I');
+
+-------------------------Procedure--------------------------------
+Delimiter //
+create procedure calfin(
+    IN rn int,
+    IN nb varchar(50)
+    )
+    BEGIN
+    DECLARE doi DATE;
+    DECLARE days int;
+    DECLARE stat char;
+    DECLARE fineamt int;
+    DECLARE EXIT HANDLER for SQLEXCEPTION select "record not found";
+    SELECT dateofissue,status INTO doi,stat
+    FROM Borrower
+    WHERE rollno = rn AND nameofbook = nb;
+    SET days=DATEDIFF(CURDATE(),doi);
+    IF days > 30 THEN
+    set fineamt = days*50;
+    ELSE
+    SET fineamt=days*5;
+    END IF;
+    INSERT INTO Fine VALUES(rn,doi,fineamt);
+    UPDATE Borrower
+    SET status='R'
+    WHERE rollno=rn AND nameofbook = nb;
+    END//
+
+----------------------Calling Procedure------------------
+call calfin(4,"Programming in Java");
+
+select * from Fine;

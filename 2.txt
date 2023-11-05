@@ -1,0 +1,53 @@
+------------creating Tables-------------
+create table Stud_Marks(
+    name varchar(50) primary key,
+    total_marks int
+    );
+
+create table Result(
+    rollno int AUTO_INCREMENT,
+    name varchar(50),
+    class varchar(50),
+    PRIMARY KEY(rollno));
+
+---------------inserting values-----------
+
+insert into Stud_Marks VALUES("Anushka",1200);
+
+insert into Stud_Marks VALUES("Gaurav",950);
+
+insert into Stud_Marks VALUES("Himanshu",830);
+
+---------------Procedure---------------
+
+DELIMITER //
+CREATE PROCEDURE proc_Grade(IN uname VARCHAR(50))
+BEGIN
+  DECLARE sc VARCHAR(50);
+  DECLARE sm INT;
+
+  SELECT total_marks INTO sm FROM Stud_Marks WHERE uname = name;
+
+  IF sm <= 1500 AND sm >= 990 THEN
+    SET sc = "Distinction";
+  ELSEIF sm <= 989 AND sm >= 900 THEN
+    SET sc = "First Class";
+  ELSEIF sm <= 899 AND sm >= 825 THEN
+    SET sc = "Higher Second Class";
+  ELSE
+    SET sc = "Fail";
+  END IF;
+
+  INSERT INTO Result(name,class) VALUES (uname,sc);
+END;
+//
+DELIMITER ;
+
+--------------calling procedure-----------------
+call proc_Grade("Anushka");
+
+call proc_Grade("Gaurav");
+
+call proc_Grade("Himanshu");
+
+select * from Result;

@@ -1,0 +1,19 @@
+var mapFunction = function() {
+  emit(this.cid, this.amount);
+};
+
+var reduceFunction = function(key, values) {
+  return Array.sum(values);
+};
+
+
+db.customer.mapReduce(
+  mapFunction,
+  reduceFunction,
+  {
+    out: "customer_summary"
+  }
+);
+
+
+db.customer_summary.find();

@@ -1,0 +1,410 @@
+gaurav@GB:~$ sudo mysql;
+[sudo] password for gaurav:
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 12
+Server version: 8.0.34-0ubuntu0.20.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases
+    -> ;
++--------------------+
+| Database           |
++--------------------+
+| Prob1              |
+| information_schema |
+| mysql              |
+| performance_schema |
+| prac2              |
+| prac3              |
+| prac7              |
+| prac8              |
+| practical          |
+| practical1         |
+| practical2         |
+| practical4         |
+| prob1              |
+| prob2              |
+| prob3              |
+| prob7              |
+| prob8              |
+| sys                |
++--------------------+
+18 rows in set (0.01 sec)
+
+mysql> create database prac1;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> use prac1
+Database changed
+mysql> create table branch (branch_name varchar(50) Primary key,branch_city varchar(50),asset int);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> desc branch;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| branch_name | varchar(50) | NO   | PRI | NULL    |       |
+| branch_city | varchar(50) | YES  |     | NULL    |       |
+| asset       | int         | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> create table account (acc_no int, branch_name varchar(50),balance int,FOREIGN KEY(branch_name) REFERENCES branch(branch_name));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> alter table account add acc_no PRIMARY KEY;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'PRIMARY KEY' at line 1
+mysql> alter table account modify column acc_no int PRIMARY KEY;
+Query OK, 0 rows affected (0.06 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc account;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| acc_no      | int         | NO   | PRI | NULL    |       |
+| branch_name | varchar(50) | YES  | MUL | NULL    |       |
+| balance     | int         | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> create table customer (cust_name varchar(50) PRIMARY KEY,cust_street varchar(50),cust_city varchar(50));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create table depositor (cust_name varchar(50),acc_no,FOREIGN KEY(cust_name) REFERENCES customer(cust_name),FOREIGN KEY(acc_no) REFERENCES account(acc
+_no));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',FOREIGN KEY(cust_name) REFERENCES customer(cust_name),FOREIGN KEY(acc_no) REFER' at line 1
+mysql> create table depositor (cust_name varchar(50),acc_no int,FOREIGN KEY(cust_name) REFERENCES customer(cust_name),FOREIGN KEY(acc_no) REFERENCES account
+(acc_no));
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> desc depositor;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| cust_name | varchar(50) | YES  | MUL | NULL    |       |
+| acc_no    | int         | YES  | MUL | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> alter table customer modify column acc_no int PRIMARY KEY;
+ERROR 1054 (42S22): Unknown column 'acc_no' in 'customer'
+mysql> alter table depositor modify column acc_no int PRIMARY KEY;
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc depositor;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| cust_name | varchar(50) | YES  | MUL | NULL    |       |
+| acc_no    | int         | NO   | PRI | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> create table loan (acc_no int not null,loan_no int PRIMARY KEY, branch_name varchar(50),amount int,,FOREIGN KEY(branch_name) REFERENCES branch(branch_name),,FOREIGN KEY(acc_no) REFERENCES account(acc_no));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',FOREIGN KEY(branch_name) REFERENCES branch(branch_name),,FOREIGN KEY(acc_no) RE' at line 1
+mysql> create table loan (acc_no int not null,loan_no int PRIMARY KEY, branch_name varchar(50),amount int,,FOREIGN KEY(branch_name) REFERENCES branch(branch
+_name),FOREIGN KEY(acc_no) REFERENCES account(acc_no));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',FOREIGN KEY(branch_name) REFERENCES branch(branch_name),FOREIGN KEY(acc_no) REF' at line 1
+mysql> create table loan (acc_no int,loan_no int PRIMARY KEY, branch_name varchar(50),amount int,,FOREIGN KEY(branch_name) REFERENCES branch(branch_name),FO
+REIGN KEY(acc_no) REFERENCES account(acc_no));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',FOREIGN KEY(branch_name) REFERENCES branch(branch_name),FOREIGN KEY(acc_no) REF' at line 1
+mysql> create table loan (acc_no int not null,loan_no int PRIMARY KEY, branch_name varchar(50),amount int,FOREIGN KEY(branch_name) REFERENCES branch(branch_
+name),FOREIGN KEY(acc_no) REFERENCES account(acc_no));
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> desc loan;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| acc_no      | int         | NO   | MUL | NULL    |       |
+| loan_no     | int         | NO   | PRI | NULL    |       |
+| branch_name | varchar(50) | YES  | MUL | NULL    |       |
+| amount      | int         | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+mysql> create table borrower (cust_name varchar(50),loan_no int PRIMARY KEY,FOREIGN KEY(cust_name) REFERENCES customer(cust_name),FOREIGN KEY(loan_no) REFER
+ENCES loan(loan_no));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> desc borrower;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| cust_name | varchar(50) | YES  | MUL | NULL    |       |
+| loan_no   | int         | NO   | PRI | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> insert into account values (101,"akurdi",45000);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`prac1`.`account`, CONSTRAINT `account_ibfk_1` FOREIGN KEY (`branch_name`) REFERENCES `branch` (`branch_name`))
+mysql> insert into branch values ("akurdi","pune",100000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into branch values ("pimpri","pune",200000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into branch values ("sangvi","pune",300000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into branch values ("pune","pune",400000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into account values (101,"akurdi",45000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into account values (102,"pimpri",20000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into account values (103,"sangvi",15000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into account values (104,"pune",60000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into account values (105,"akurdi",20000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from branch;
++-------------+-------------+--------+
+| branch_name | branch_city | asset  |
++-------------+-------------+--------+
+| akurdi      | pune        | 100000 |
+| pimpri      | pune        | 200000 |
+| pune        | pune        | 400000 |
+| sangvi      | pune        | 300000 |
++-------------+-------------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select * from account;
++--------+-------------+---------+
+| acc_no | branch_name | balance |
++--------+-------------+---------+
+|    101 | akurdi      |   45000 |
+|    102 | pimpri      |   20000 |
+|    103 | sangvi      |   15000 |
+|    104 | pune        |   60000 |
+|    105 | akurdi      |   20000 |
++--------+-------------+---------+
+5 rows in set (0.00 sec)
+
+mysql> insert into customer values ("gaurav","mn","pune");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into customer values ("anushka","tn","pune");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into customer values ("himanshu","kn","pune");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into customer values ("mithil","vn","pune");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into customer values ("yamini","dn","pune");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from customer;
++-----------+-------------+-----------+
+| cust_name | cust_street | cust_city |
++-----------+-------------+-----------+
+| anushka   | tn          | pune      |
+| gaurav    | mn          | pune      |
+| himanshu  | kn          | pune      |
+| mithil    | vn          | pune      |
+| yamini    | dn          | pune      |
++-----------+-------------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> insert into depositor values ("anushka",102);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into depositor values ("mithil",104);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into depositor values ("yamini",105);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into loan values (101,201,"akurdi:,5000);
+    ">
+
+^C
+mysql> insert into loan values (101,201,"akurdi",5000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into loan values (103,203,"sangvi",7000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into loan values (105,205,"akurdi",15000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from depositor;
++-----------+--------+
+| cust_name | acc_no |
++-----------+--------+
+| anushka   |    102 |
+| mithil    |    104 |
+| yamini    |    105 |
++-----------+--------+
+3 rows in set (0.00 sec)
+
+mysql> select * from loan;
++--------+---------+-------------+--------+
+| acc_no | loan_no | branch_name | amount |
++--------+---------+-------------+--------+
+|    101 |     201 | akurdi      |   5000 |
+|    103 |     203 | sangvi      |   7000 |
+|    105 |     205 | akurdi      |  15000 |
++--------+---------+-------------+--------+
+3 rows in set (0.00 sec)
+
+mysql> insert into borrower values ("gaurav",201);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into borrower values ("himanshu",203);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into borrower values ("yamini",205);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from borrower;
++-----------+---------+
+| cust_name | loan_no |
++-----------+---------+
+| gaurav    |     201 |
+| himanshu  |     203 |
+| yamini    |     205 |
++-----------+---------+
+3 rows in set (0.00 sec)
+
+mysql> select branch_name from loan;
++-------------+
+| branch_name |
++-------------+
+| akurdi      |
+| akurdi      |
+| sangvi      |
++-------------+
+3 rows in set (0.00 sec)
+
+mysql> select loan_no from loan where branch_name="akurdi" and amount>12000;
++---------+
+| loan_no |
++---------+
+|     205 |
++---------+
+1 row in set (0.00 sec)
+
+mysql> select loan_no,borrower.cust_name,amount from loan,borrower where loan.loan_no=borrower.loan_no;
+ERROR 1052 (23000): Column 'loan_no' in field list is ambiguous
+mysql> select loan_no,borrower.cust_name,amount from loan,borrower where borrower.loan_no=loan.loan_no;
+ERROR 1052 (23000): Column 'loan_no' in field list is ambiguous
+mysql> select loan.loan_no,borrower.cust_name,loan.amount from loan,borrower where borrower.loan_no=loan.loan_no;
++---------+-----------+--------+
+| loan_no | cust_name | amount |
++---------+-----------+--------+
+|     201 | gaurav    |   5000 |
+|     203 | himanshu  |   7000 |
+|     205 | yamini    |  15000 |
++---------+-----------+--------+
+3 rows in set (0.00 sec)
+
+mysql> select loan.loan_no,borrower.cust_name,loan.amount from loan,borrower where loan.loan_no=borrower.loan_no;
++---------+-----------+--------+
+| loan_no | cust_name | amount |
++---------+-----------+--------+
+|     201 | gaurav    |   5000 |
+|     203 | himanshu  |   7000 |
+|     205 | yamini    |  15000 |
++---------+-----------+--------+
+3 rows in set (0.00 sec)
+
+mysql> select loan.branch_name,borrower.cust_name from loan,borrower where loan.loan_no=borrower.loan_no order by cust_name;
++-------------+-----------+
+| branch_name | cust_name |
++-------------+-----------+
+| akurdi      | gaurav    |
+| sangvi      | himanshu  |
+| akurdi      | yamini    |
++-------------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> select cust_name from (select cust_name from customer union select cust_name from borrower union cust_name from depositor) as allcustomer;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'cust_name from depositor) as allcustomer' at line 1
+mysql> select cust_name from (select cust_name from customer union select cust_name from borrower union select cust_name from depositor) as allcustomer;
++-----------+
+| cust_name |
++-----------+
+| anushka   |
+| gaurav    |
+| himanshu  |
+| mithil    |
+| yamini    |
++-----------+
+5 rows in set (0.01 sec)
+
+mysql> select cust_name from customer where cust_name in  (select cust_name from borrower) and cust_name in (select cust_name from depositor);
++-----------+
+| cust_name |
++-----------+
+| yamini    |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select avg(balance) from account where branch_name="pimpri";
++--------------+
+| avg(balance) |
++--------------+
+|   20000.0000 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> select avg(balance) from account where branch_name="akurdi";
++--------------+
+| avg(balance) |
++--------------+
+|   32500.0000 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> select branch_name from account where avg(balance)>12000;
+ERROR 1111 (HY000): Invalid use of group function
+mysql> select branch_name from account group by balance having avg(balance)>12000;
+ERROR 1055 (42000): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'prac1.account.branch_name' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> select branch_name from account group by branch_name having avg(balance)>12000;
++-------------+
+| branch_name |
++-------------+
+| akurdi      |
+| pimpri      |
+| pune        |
+| sangvi      |
++-------------+
+4 rows in set (0.00 sec)
+
+mysql> select branch_name from account group by branch_name having avg(balance)>20000;
++-------------+
+| branch_name |
++-------------+
+| akurdi      |
+| pune        |
++-------------+
+2 rows in set (0.00 sec)
+
+mysql> select sum(amount) from losn;
+ERROR 1146 (42S02): Table 'prac1.losn' doesn't exist
+mysql> select sum(amount) from loan;
++-------------+
+| sum(amount) |
++-------------+
+|       27000 |
++-------------+
+1 row in set (0.00 sec)

@@ -1,0 +1,40 @@
+--------------Creating table-----------------
+create table newtable(
+    -> rollno int primary key,
+    -> attendance int
+    -> );
+
+create table oldtable(
+    -> rollno int primary key,
+    -> attendance int
+    -> );
+
+---------------Inserting Values-------------------
+insert into oldtable values(1,90),(2,50),(3,20),(4,20),(5,10),(6,70);
+
+insert into newtable values(5,10),(6,70);
+
+----------------CURSOR-----------------------------
+delimiter //
+create procedure rollcoll()
+     BEGIN
+     DECLARE done INT DEFAULT FALSE;
+     DECLARE vr int;
+     DECLARE va int;
+     DECLARE cur CURSOR FOR SELECT rollno,attendance from newtable;
+     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=TRUE;
+     OPEN cur;
+     read_loop: LOOP
+     FETCH cur INTO vr,va;
+     IF done THEN
+     LEAVE read_loop;
+     END IF;
+     INSERT IGNORE INTO oldtable values(vr,va);
+     END LOOP;
+     CLOSE cur;
+     END//
+
+---------------------CALL----------------------------
+Delimiter ;
+call rollcoll();
+select * from oldtable;

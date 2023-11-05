@@ -1,0 +1,34 @@
+ create table stud_recod(
+    -> id int PRIMARY KEY AUTO_INCREMENT,
+    -> name varchar(50),
+    -> class varchar(50),
+    -> address varchar(50),
+    -> grades char,
+    -> enroll_det date,
+    -> sub_name varchar(50),
+    -> attendance int
+    -> );
+---------insert---------------
+INSERT INTO stud_recod (id, name, class, address, grades, enroll_det, sub_name, attendance)
+VALUES (1, 'John Doe', '10th Grade', '123 Main Street', 'A', '2023-01-10', 'Math', 90);
+
+INSERT INTO stud_recod (id, name, class, address, grades, enroll_det, sub_name, attendance)
+VALUES (2, 'Jane Smith', '11th Grade', '456 Elm Street', 'B', '2023-01-12', 'Science', 85);
+
+INSERT INTO stud_recod (id, name, class, address, grades, enroll_det, sub_name, attendance)
+VALUES (3, 'Alice Johnson', '12th Grade', '789 Oak Avenue', 'A', '2023-01-15', 'History', 95);
+
+INSERT INTO stud_recod (id, name, class, address, grades, enroll_det, sub_name, attendance)
+VALUES (4, 'Bob Williams', '10th Grade', '567 Pine Street', 'C', '2023-01-09', 'English', 75);
+
+INSERT INTO stud_recod (id, name, class, address, grades, enroll_det, sub_name, attendance)
+VALUES (5, 'Eva Brown', '11th Grade', '234 Cedar Avenue', 'A', '2023-01-11', 'Physics', 88);
+
+-------------------view--------------------
+create view studview as select id,name,grades,attendance from stud_recod;
+
+-----------------index----------------------
+ create index stn
+    -> on stud_recod(name);
+show index from stud_recod;
+

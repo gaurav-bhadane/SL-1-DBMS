@@ -1,0 +1,45 @@
+-------Find the information about all teachers alphabetically
+
+db.Teachers.find().sort({Tname:1});
+
+
+-------Find the information about all teachers of the computer department
+
+ db.Teachers.find({dname:'Computer'});
+
+-------Find the information about all teachers of computer,IT,and e&amp;TC department
+
+db.Teachers.find({dname:{$in :["Computer","IT","E&TC"]}});
+
+-------Find the information about all teachers of computer,IT,and E&amp;TC department having
+salary greater than or equal to 10000/-
+
+db.Teachers.find({dname:{$in :["Computer","IT","E&TC"]},salary:{$gte:10000}});
+
+-------Find the student information having roll_no = 2 or Sname=xyz
+
+db.Students.find( {$or:[{roll_no:2},{Sname:'xyz'}]});
+
+-----Update the experience of teacher-praveen to 10 years, if the entry is not available in
+database consider the entry as new entry.
+
+db.Teachers.update({Tname:'Praveen'},{$set:{experience:10}},{upsert:true});
+
+
+------Update the department of all the teachers working in IT department to COMP
+
+db.Teachers.updateMany({dname:"IT"},{$set:{dname:"Computer"}});
+
+------find the teacher&#39;s name and their experience from teachers’ collection
+
+db.Teachers.find({},{Tname:1,experience:1,_id:0});
+
+------Delete all the documents from teacher&#39;s collection having IT dept
+
+ db.Teachers,deleteMany({dname:"IT"});
+
+
+-------display with pretty() method, the first 3 documents in teacher&#39;s collection in ascending
+order.
+
+db.Teachers.find().sort({Tname:1}).pretty();
